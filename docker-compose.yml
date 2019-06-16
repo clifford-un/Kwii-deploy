@@ -1,0 +1,119 @@
+version: '3'
+services:
+
+  academy-api:
+    image: cliffordun/api-gateway
+    ports:
+      - '5500:5500'
+    depends_on:
+      - user-ms
+      - auth-ms
+      - chatroom-ms
+      - notif-ms
+      - lt-chat-ms
+    environment:
+      PORT: '5500'
+      SHOW_URLS: 'true'
+      CHATS_URL: 'lt-chat-ms'
+      CHATS_PORT: '8000'
+      CHATS_ENTRY: 'chats'
+      USERS_URL: 'user-ms'
+      USERS_PORT: '3000'
+      USERS_ENTRY: 'users'
+      TESTS_ENTRY: 'tests'
+      FRIENDS_ENTRY: 'friends'
+      NOTIF_URL: 'notif-ms'
+      NOTIF_PORT: '9000'
+      NOTIF_ENTRY: 'notification'
+      USDEV_ENTRY: 'user_device'
+      CHATROOM_URL: 'chatroom-ms'
+      CHATROOM_PORT: '8080'
+
+  user-ms:
+    image: cliffordun/users-ms
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - /user-ms/ms
+    ports:
+      - '5000:3000'
+    depends_on:
+      - user-db
+    environment:
+      - POSTGRES_HOST=user-db
+
+  user-db:
+    image: postgres
+    volumes:
+      - /user-ms/db
+    ports:
+      - '5001:5432'
+
+  auth-ms:
+    image: cliffordun/authentication-ms
+    restart: on-failure
+    ports:
+      - 6000:3200
+    depends_on:
+      - auth-db
+      - user-db
+    environment:
+      - REDIS_URL=auth-db:6379
+      - USER_DB_URL=user-db:5432
+
+  auth-db:
+    image: redis:5-alpine
+    ports:
+      - 6001:6379
+  
+  chatroom-ms:
+    image: cliffordun/chatroom-ms
+    restart: on-failure
+    ports:
+      - "7000:8080"
+    depends_on:
+      - chatroom-db
+    environment:
+      - MONGO_URL=chatroom-db
+      - MONGO_PORT=27017
+
+  chatroom-db:
+    image: mongo:4
+    ports:
+      - "7001:27017"
+
+  notif-ms:
+    image: cliffordun/notification-ms
+    restart: on-failure
+    ports:
+      - 9000:9000
+    depends_on:
+      - notif-db
+      - notif-gr
+    environment:
+      - FIREBASE_API_KEY=${FIREBASE_API_KEY}
+      - REDIS_URL="notif-db:6379"
+      - GORUSH_HOST="notif-gr:8088"
+
+  notif-db:
+    image: redis:5-alpine
+    ports:
+      - 9001:6379
+
+  notif-gr:
+    image: appleboy/gorush
+    ports:
+      - 9002:8088
+    entrypoint: 'gorush -k "${FIREBASE_API_KEY}"'
+
+  lt-chat-ms:
+      image: cliffordun/lt-chat-ms
+      command: python manage.py runserver 0:8000
+      ports:
+        - "8000:8000"
+      depends_on:
+        - lt-chat-db
+
+  lt-chat-db:
+      image: mongo:4
+      ports:
+        - "8001:27017"
