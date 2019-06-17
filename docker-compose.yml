@@ -28,6 +28,9 @@ services:
       USDEV_ENTRY: 'user_device'
       CHATROOM_URL: 'chatroom-ms'
       CHATROOM_PORT: '8080'
+      AUTH_URL: 'auth-ms'
+      AUTH_PORT: 3200
+      AUTH_ENTRY: 'login'
 
   user-ms:
     image: cliffordun/users-ms
