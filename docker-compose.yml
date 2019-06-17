@@ -1,6 +1,13 @@
 version: '3'
 services:
 
+  academy-proxy:
+    image: cliffordun/kwii-proxy
+    depends_on:
+      - kwii-api
+    ports:
+      - '80:80'
+
   kwii-api:
     image: cliffordun/api-gateway
     ports:
