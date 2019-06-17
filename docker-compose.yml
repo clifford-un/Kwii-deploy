@@ -2,7 +2,7 @@ version: '3'
 services:
 
   academy-proxy:
-    image: cliffordun/kwii-proxy
+    image: cliffordun/kwii-nginx
     depends_on:
       - kwii-api
     ports:
