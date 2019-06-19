@@ -39,7 +39,7 @@ services:
 
   user-ms:
     image: cliffordun/users-ms
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "sleep 40 && rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - /user-ms/ms
     depends_on:
