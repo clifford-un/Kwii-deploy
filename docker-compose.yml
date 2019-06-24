@@ -37,6 +37,12 @@ services:
       AUTH_PORT: 3200
       AUTH_ENTRY: 'login'
 
+  kwii-interface:
+    image: cliffordun/kwii-interface
+    ports:
+      - "8420:8420"
+    command: python soap_server.py    
+
   user-ms:
     image: cliffordun/users-ms
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rake db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'"
