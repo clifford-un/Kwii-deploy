@@ -1,12 +1,13 @@
 version: '3'
 services:
 
-  academy-proxy:
-    image: cliffordun/kwii-nginx
+  kwii-proxy:
+    image: 9a54be8ffaf7
     depends_on:
       - kwii-api
+      - kwii-web
     ports:
-      - '80:80'
+      - '443:443'
 
   kwii-api:
     image: cliffordun/api-gateway
@@ -36,6 +37,10 @@ services:
       AUTH_URL: 'auth-ms'
       AUTH_PORT: 3200
       AUTH_ENTRY: 'login'
+
+  kwii-web:
+    image: cliffordun/kwii-web
+    command: "npm run start"
 
   kwii-interface:
     image: cliffordun/kwii-interface
@@ -90,18 +95,14 @@ services:
     restart: on-failure
     depends_on:
       - notif-db
-      - notif-gr
+    ports:
+      - 9000:9000
     environment:
       - FIREBASE_API_KEY=${FIREBASE_API_KEY}
       - REDIS_URL="notif-db:6379"
-      - GORUSH_HOST="notif-gr:8088"
 
   notif-db:
     image: redis:5-alpine
-
-  notif-gr:
-    image: appleboy/gorush
-    entrypoint: 'gorush -k "${FIREBASE_API_KEY}"'
 
   lt-chat-ms:
       image: cliffordun/lt-chat-ms
