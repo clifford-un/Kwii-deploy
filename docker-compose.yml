@@ -2,7 +2,7 @@ version: '3'
 services:
 
   kwii-proxy:
-    image: 9a54be8ffaf7
+    image: cliffordun/kwii-nginx
     depends_on:
       - kwii-api
       - kwii-web
