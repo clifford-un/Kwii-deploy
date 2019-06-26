@@ -42,11 +42,17 @@ services:
     image: cliffordun/kwii-web
     command: "npm run start"
 
-  kwii-interface:
+  kwii-server-interface:
     image: cliffordun/kwii-interface
     ports:
       - "8420:8420"
-    command: python soap_server.py    
+    command: python soap_server.py
+
+  kwii-client-interface:
+    image: cliffordun/kwii-interface
+    ports:
+      - "8425:8425"
+    command: python soap_client.py
 
   user-ms:
     image: cliffordun/users-ms
