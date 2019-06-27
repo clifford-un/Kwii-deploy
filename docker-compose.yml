@@ -43,7 +43,7 @@ services:
     command: "npm run start"
 
   kwii-server-interface:
-    depens_on:
+    depends_on:
       - kwii-api
     image: cliffordun/kwii-interface
     ports:
