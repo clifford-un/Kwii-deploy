@@ -44,7 +44,7 @@ services:
 
   kwii-server-interface:
     depens_on:
-      -kwii-api
+      - kwii-api
     image: cliffordun/kwii-interface
     ports:
       - "8420:8420"
