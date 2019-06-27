@@ -17,6 +17,7 @@ services:
       - chatroom-ms
       - notif-ms
       - lt-chat-ms
+      - kwii-client-interface
     environment:
       PORT: '5500'
       SHOW_URLS: 'true'
@@ -37,6 +38,9 @@ services:
       AUTH_URL: 'auth-ms'
       AUTH_PORT: 3200
       AUTH_ENTRY: 'login'
+      INTERF_URL: 'kwii-client-interface'
+      INTERF_PORT: '8425'
+      INTERF_ENTRY: 'getPosts'
 
   kwii-web:
     image: cliffordun/kwii-web
@@ -52,8 +56,6 @@ services:
 
   kwii-client-interface:
     image: cliffordun/kwii-interface
-    ports:
-      - "8425:8425"
     command: python soap_client.py
 
   user-ms:
